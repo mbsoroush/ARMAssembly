@@ -1,0 +1,26 @@
+	AREA dtoh,CODE,READONLY
+	ENTRY
+NUM EQU 0X9876	;Take decimal number
+	LDR R1, =NUM 	;R1 = 9876
+	AND R2,R1,#0X000F	;R2 = 6
+	AND R3,R1,#0X00F0	;R3 = 0070
+	LSR R3,#4	;R3 = 0007
+	MOV R4,#10	;R4 = 10
+	MLA R5,R3,R4,R2		;R5 = (R3 * R4) + R2 = 76
+	
+	AND R3,R1,#0X0F00	;R3 = 800
+	LSR R3,#8	;R3 = 008
+	MOV R4,#100 	;R4 = 100
+	MLA R5,R3,R4,R5		;R5 = (R3 * R4) + R5 = 876
+	AND R3,R1,#0XF000	;R3 = 9000
+	LSR	R3,#12	;R3 = 0009
+	MOV R4,#1000	;R4 = 1000
+	MLA R5,R3,R4,R5 	;R5 = (R3 * R4) + R5 = 9876 = 0x2694
+	
+	LDR R6, =RESULT		;R6 = Address of Result
+	STR R5, [R6]	;Store answer @R6
+	
+HERE B HERE
+		AREA DATA2,DATA,READWRITE
+RESULT DCD 0X0
+	END		;Mark end of file
